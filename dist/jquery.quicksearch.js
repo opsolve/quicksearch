@@ -19,6 +19,7 @@
             resetBind: 'reset',
             removeDiacritics: false,
             minValLength: 0,
+            hideOptions: true,
             onBefore: $.noop,
             onAfter: $.noop,
             onValTooSmall: $.noop,
@@ -139,7 +140,7 @@
             return str;
         };
 
-        var timeout, cache, rowcache, hideOptions = true, jq_results, val = '', last_val = '', self = this,
+        var timeout, cache, rowcache, jq_results, val = '', last_val = '', self = this,
             options = $.extend({}, $.quicksearch.defaults, opt);
 
         // Assure selectors
@@ -162,10 +163,10 @@
             query = options.prepareQuery(val);
 
             for (i = 0, len = rowcache.length; i < len; i++) {
-                if (val_empty && hideOptions) {
+                if (val_empty && options.hideOptions) {
                     options.hide.apply(rowcache[i]);
                     noresults = false;
-                    hideOptions = true;
+                    options.hideOptions = true;
                 } else if (query.length > 0 && query[0].length < options.minValLength) {
                     options.show.apply(rowcache[i]);
                     noresults = false;
@@ -269,7 +270,7 @@
         this.cache = function (obj) {
             var doRedraw = typeof obj === "undefined" || typeof obj.doRedraw === "undefined" ? true : obj.doRedraw;
 
-            hideOptions = typeof obj === "undefined" || typeof obj.hideOptions === "undefined" ? true : obj.hideOptions;
+            options.hideOptions = typeof obj === "undefined" || typeof obj.hideOptions === "undefined" ? true : obj.hideOptions;
 
             jq_results = $(target).not(options.noResults);
 
@@ -320,7 +321,7 @@
             return this;
         };
 
-        this.cache();
+        this.cache({ hideOptions: options.hideOptions });
         this.stripe();
         this.loader(false);
 
